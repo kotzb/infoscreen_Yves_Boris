@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Infoscreen</title>
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="main-wrapper">
+            <div class="header">
+                <h1 class="page-title"></h1>
+            </div>
+            <div class="timetable">
+                <div class="header">
+                    <h3>Schedule</h3>
+                </div>
+            </div>
+            <div class="menu-card">
+                <div class="header">
+                    <h3>Todays Meals</h3>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+    start();
+    function setHeader() {
+        var date = new Date();
+        var y =  date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m.toString().length < 2 ? ("0" + m) : m;
+        var d = date.getDate();
+        d = d.toString().length < 2 ?  ("0" + d) : d;
+        var dateString = d + "-" + m + "-" + y;
+        document.querySelector('.page-title').innerHTML = dateString;
+    }
+    function load(url, callback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(s) {
+            if (this.readyState == 4 && this.status == 200) {
+                var resp = JSON.parse(this.responseText);
+                callback(resp);
+           }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+    function start() {
+        setHeader();
+        load("http://localhost:3000/infoscreen/getMenu", (data) => {
+            var menu = document.querySelector(".menu-card");
+            var wrapper = document.createElement("div");
+            wrapper.classList.add("wrapper");
+            menu.appendChild(wrapper);
+            data.forEach((item) => {
+                for (const [key, value] of Object.entries(item)) {
+                    if (key != 'id') {
+                        if (key == "ingredients") {
+                            var ing = JSON.parse(value);
+                            var div = document.createElement("div");
+                            div.classList.add(key);
+                            wrapper.appendChild(div);
+                            var ul = document.createElement("ul");
+                            wrapper.appendChild(ul);
+                            ing.forEach((item) => {
+                                var li = document.createElement("li");
+                                li.innerHTML = item;
+                                ul.appendChild(li);
+                            });
+                        } else if (key != "day") {
+                            var div = document.createElement("div");
+                            div.innerHTML = value;
+                            div.classList.add(key);
+                            wrapper.appendChild(div);
+                        }
+                    }
+                }
+            });
+        });
+        load("http://localhost:3000/infoscreen/getTimetable", (data) => {
+            var timetable = document.querySelector(".timetable");
+            var rows = [];
+            data.forEach((item) => {
+                if (!rows[item.classroom]) {
+                    rows[item.classroom] = document.createElement("div");
+                    rows[item.classroom].classList.add("row");
+                    var title = document.createElement("div");
+
+                    title.classList.add("title");
+                    title.innerHTML = item.classroom;
+                    rows[item.classroom].appendChild(title);
+                    timetable.appendChild(rows[item.classroom]);
+                }
+                var wrapper = document.createElement("div");
+                wrapper.classList.add("wrapper");
+                rows[item.classroom].appendChild(wrapper);
+                for (const [key, value] of Object.entries(item)) {
+                    if (key != 'id' && key != 'classroom' && key != 'day') {
+                        var v = document.createElement("div");
+                        var k = document.createElement("div");
+                        k.classList.add("label");
+                        wrapper.appendChild(k)
+                        v.innerHTML = value;
+                        v.classList.add(key);
+                        wrapper.appendChild(v);
+                    }
+                }
+            });
+        });
+    }
+</script>

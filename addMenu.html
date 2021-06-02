@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Class Room Add new</title>
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="form-wrapper">
+
+                <form action="http://localhost:3000/menu/add" method="post">
+                    <h3>Add new Meal</h3>
+                    <div class="input-wrapper">
+                        <input type="date" id="day" name="day">
+                        <label for="day">Date</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" name="class">
+                        <label for="class">Name</label>
+                    </div>
+                    <input type="hidden" name="ingredients" value="TEMP">
+                    <div class="input-wrapper dual">
+                        <ul class="ingredient-list">
+
+                        </ul>
+                        <input type="text" id="ingredient" class="ingedient Field">
+                        <label for="ingredient">Ingredients</label>
+                        <button type="button" onclick="addIngredient(this.form)" class="add-ingedient-btn">Add</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="submit" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+    function addIngredient(form) {
+        var field = document.getElementById("ingredient");
+        var list = document.querySelector('.ingredient-list');
+        var li = document.createElement("li");
+        li.innerHTML = field.value;
+        field.value = "";
+        list.appendChild(li);
+    }
+    document.querySelector("form").addEventListener("submit", function(e) {
+        var data = [];
+        e.preventDefault();
+        var listItems = document.querySelectorAll('.ingredient-list li');
+        for (var i = 0; i < listItems.length; i++) {
+            data.push(listItems[i].innerHTML);
+        }
+        e.target.ingredients.value = JSON.stringify(data).replaceAll("\"", "\\\"");
+        console.log(e.target.ingredients.value);
+        e.target.submit();
+    });
+</script>

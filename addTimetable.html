@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Class Room Add new</title>
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="form-wrapper">
+                <form  action="http://localhost:3000/timetable/add" method="post">
+                    <div class="input-wrapper">
+                        <input type="date" id="day" name="day">
+                        <label for="day">Date</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="class" name="class">
+                        <label for="class">Class</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="classroom" name="room">
+                        <label for="classroom">Classroom</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="subject" name="subject">
+                        <label for="subject">Subject</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="time" id="start_time" min="07:00" max="17:59" name="start_time">
+                        <label for="start_time">Start</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="time" id="end_time" min="07:00" max="17:59"  name="end_time">
+                        <label for="end_time">End</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="teacher" name="teacher">
+                        <label for="teacher">Teacher</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="submit" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
